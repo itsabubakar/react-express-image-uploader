@@ -2,6 +2,8 @@ import { useEffect } from "react";
 import { useRef, useState } from "react";
 import ImageIcon from "../icons/ImageIcon";
 import axios from 'axios'
+import Loader from "./Loader";
+import Result from "./Result";
 
 function DragDropFile() {
     // drag state
@@ -9,6 +11,7 @@ function DragDropFile() {
     const inputRef = useRef(null)
     const [loading, setLoading] = useState(false)
     const [percentage, setPercentage] = useState(0)
+    const [filePath, setFilePath] = useState('')
 
     let percent = 0
 
@@ -68,14 +71,14 @@ function DragDropFile() {
                                 setPercentage(0)
                             }, 1000);
                         }
+                        console.log(res.data.filePath)
+                        setFilePath(res.data.filePath)
                     })
                     .catch((error) => {
                         console.error('Upload Error:', error)
                     })
 
-                // response.then(() => {
-                //     console.log('File uploaded successfully')
-                // })
+                // console.log(response)
 
             } catch (error) {
                 console.log(error)
@@ -96,14 +99,10 @@ function DragDropFile() {
     return (
         <>
             {loading && percentage < 100 &&
-                <div className="">
-                    <div className="w-[300px] bg-gray-200 rounded-full dark:bg-gray-700">
-                        <div className="bg-blue-600 text-lg pl-3 font-medium text-blue-100 text-center p-0.5 leading-none rounded-full h-2" style={{ width: `${percentage}%` }}></div>
-                    </div></div>
-
+                <Loader percentage={percentage} />
             }
 
-            {!loading && percentage === 100 && <div>Done</div>}
+            {!loading && percentage === 100 && <Result filepath={filePath} />}
             {!loading && percentage < 100 && <div className="text-center hsd py-8 px-5 rounded-lg">
                 <form id="form-file-upload" onDragEnter={handleDrag} onSubmit={(e) => e.preventDefault()}>
                     <h2 className='font-semibold text-xl mb-3'>Upload your image</h2>
