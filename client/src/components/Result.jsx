@@ -7,9 +7,10 @@ const Result = ({ filepath }) => {
     const onCopy = () => {
         navigator.clipboard.writeText(`http://127.0.0.1:5173/public${filepath}`)
         setCopied(!copied)
-        setTimeout(() => {
+        const timer = setTimeout(() => {
             setCopied(false)
-        }, 1000)
+        }, 1500)
+        return () => clearTimeout(timer)
     }
 
     return (

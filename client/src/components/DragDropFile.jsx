@@ -86,13 +86,36 @@ function DragDropFile() {
         }
     }
 
-    const handleChange = function (e) {
+    const handleChange = async function (e) {
         e.preventDefault();
         if (e.target.files && e.target.files[0]) {
             // at least one file has been selected so do something
-            // handleFiles(e.target.files);
-            // setFile(e.target.files[0])
-            // console.log(file)
+            let imgFile = e.target.files[0]
+
+            const formData = new FormData()
+
+            formData.append('file', imgFile)
+            try {
+                const response = await axios.post('http://localhost:3500/upload', formData, config)
+                    .then(res => {
+                        setPercentage(percent), () => {
+                            setTimeout(() => {
+                                setPercentage(0)
+                            }, 1000);
+                        }
+                        console.log(res.data.filePath)
+                        setFilePath(res.data.filePath)
+                    })
+                    .catch((error) => {
+                        console.error('Upload Error:', error)
+                    })
+
+                // console.log(response)
+
+            } catch (error) {
+                console.log(error)
+            }
+
         }
     }
 
